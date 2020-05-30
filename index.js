@@ -2,10 +2,12 @@ const express = require("express")
 const path = require("path")
 const mongoose = require("mongoose")
 
+require("dotenv").config()
+
 // Mongo connnection
 void (async function () {
   try {
-    await mongoose.connect("process.env.DB_CONNECT", {
+    await mongoose.connect(process.env.DB_CONNECT, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
@@ -16,7 +18,27 @@ void (async function () {
   }
 })()
 
-require("dotenv").config()
+// Models
+const User = require("./models/User.js")
+
+async function addPeter() {
+  const peter = new User({
+    name: "Peter",
+    age: 21,
+    gender: "male",
+    sexuality: "hetero",
+  })
+
+  try {
+    await peter.save()
+    // If success
+    console.log("Added", peter, t)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+addPeter()
 
 // Workspace modules
 const routes = require("./modules/routes.js")
