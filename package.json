@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jesseDijkman1/backend-2020/issues"
   },
-  "homepage": "https://github.com/jesseDijkman1/backend-2020#readme"
+  "homepage": "https://github.com/jesseDijkman1/backend-2020#readme",
+  "devDependencies": {
+    "eslint": "^7.1.0"
+  }
 }
