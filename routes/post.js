@@ -4,7 +4,26 @@ const router = express.Router()
 
 const User = require("../models/User.js")
 
-router.post("/userLogin", (req, res) => {})
+router.post("/userLogin", async (req, res) => {
+  const { email, password } = req.body
+
+  try {
+    const foundUser = await User.findOne({ email })
+
+    if (foundUser.password == password) {
+      req.session.loggedin = true
+      req.session.userId = foundUser._id
+
+      res.redirect("/")
+    } else {
+      res.render("login", { errors: ["password"], values: { email } })
+    }
+  } catch (err) {
+    console.log("Error", err)
+
+    res.render("login", { errors: ["email"], values: { email } })
+  }
+})
 
 router.post("/userRegister", async (req, res) => {
   const { email, name, age, password, password_check } = req.body

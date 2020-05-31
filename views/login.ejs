@@ -1,9 +1,13 @@
 <form action="userLogin" method="POST">
-  <label for="email">Email</label>
-  <input id="email" type="email" name="email" />
+  <div class="<% if (errors.includes("email")) { %> error <% } %>">
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" value="<%= values.email %>" />
+  </div>
 
-  <label for="password">Password</label>
-  <input id="password" type="password" name="password" />
+  <div class="<% if (errors.includes("password")) { %> error <% } %>">
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" />
+  </div>
 
   <button type="submit">Login</button>
 </form>
