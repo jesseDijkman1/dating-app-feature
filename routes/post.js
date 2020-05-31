@@ -67,4 +67,12 @@ router.post("/userRegister", async (req, res) => {
   }
 })
 
+router.post("/logout", (req, res) => {
+  req.session.destroy()
+
+  console.log("ok", req.ression)
+
+  res.redirect("/login")
+})
+
 module.exports = router

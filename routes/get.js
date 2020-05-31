@@ -34,6 +34,7 @@ function isLoggedOut(req, res, next) {
 router.get("/", isLoggedIn, (req, res) => {
   res.render("index", {
     user: {
+      id: req.session.userId,
       name: req.session.userName,
     },
   })

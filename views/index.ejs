@@ -1,1 +1,7 @@
 <h1>Hello world <%= user.name %></h1>
+
+<% if ( !!user.id ) { %>
+  <form action="/logout" method="POST">
+    <button>Logout</button>
+  </form>
+<% } %>
