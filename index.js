@@ -2,6 +2,7 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
+const session = require("express-session")
 
 require("dotenv").config()
 
@@ -10,7 +11,16 @@ const PORT = process.env.PORT || 3000
 
 const app = express()
 
-// Body parser
+// Express Session
+app.use(
+  session({
+    secret: "mysecret",
+    resave: true,
+    saveUninitialized: true,
+  })
+)
+
+// Bodyparser
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -18,10 +28,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(expressLayouts)
 app.set("view engine", "ejs")
 
-// GET routes
+// GET Routes
 app.use(require("./routes/get.js"))
 
-// POST routes
+// POST Routes
 app.use(require("./routes/post.js"))
 
 app.listen(PORT, async () => {
