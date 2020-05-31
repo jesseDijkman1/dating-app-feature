@@ -1,11 +1,25 @@
 const express = require("express")
-const path = require("path")
+const expressLayouts = require("express-ejs-layouts")
 const mongoose = require("mongoose")
 
 require("dotenv").config()
 
-// Mongo connnection
-void (async function () {
+// Port configuration (Heroku)
+const PORT = process.env.PORT || 3000
+
+// Express Init
+const app = express()
+
+// EJS Middleware
+app.use(expressLayouts)
+app.set("view engine", "ejs")
+
+// Routes Middleware
+app.use(require("./routes/get.js"))
+
+app.listen(PORT, async () => {
+  console.log(`Listening to port: ${PORT}`)
+
   try {
     await mongoose.connect(process.env.DB_CONNECT, {
       useNewUrlParser: true,
@@ -16,49 +30,4 @@ void (async function () {
   } catch (err) {
     console.log(err)
   }
-})()
-
-// Models
-const User = require("./models/User.js")
-
-async function addPeter() {
-  const peter = new User({
-    name: "Peter",
-    age: 21,
-    gender: "male",
-    sexuality: "hetero",
-  })
-
-  try {
-    await peter.save()
-    // If success
-    console.log("Added", peter, t)
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-addPeter()
-
-// Workspace modules
-const routes = require("./modules/routes.js")
-
-// Process.env.port is used by heroku
-const PORT = process.env.PORT || 3000
-
-const app = express()
-
-app.set("view engine", "ejs")
-app.set("views", path.resolve(__dirname, "./templates"))
-
-// Init routes
-routes(app)
-
-// const Cat = mongoose.model("Cat", { name: String })
-
-// const kitty = new Cat({ name: "Zildjian" })
-// kitty.save().then(() => console.log("meow"))
-
-app.listen(PORT, () => {
-  console.log(`Listening to port: ${PORT}`)
 })
