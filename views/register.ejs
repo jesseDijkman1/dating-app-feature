@@ -1,18 +1,28 @@
 <form action="userRegister" method="POST">
-  <label for="email">Email</label>
-  <input id="email" type="email" name="email" />
+  <div class="<% if (errors.includes("email")) { %> error <% } %>">
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" value="<%= values.email %>" />
+  </div>
 
-  <label for="name">Name</label>
-  <input id="name" type="text" name="name" />
+  <div class="<% if (errors.includes("name")) { %> error <% } %>">
+    <label for="name">Name</label>
+    <input id="name" type="text" name="name" value="<%= values.name %>" />
+  </div>
 
-  <label for="age">Age</label>
-  <input id="age" type="number" name="age" />
+  <div class="<% if (errors.includes("age")) { %> error <% } %>">
+    <label for="age">Age</label>
+    <input id="age" type="number" name="age" value="<%= values.age %>" />
+  </div>
 
-  <label for="password">Password</label>
-  <input id="password" type="password" name="password" />
+  <div class="<% if (errors.includes("password")) { %> error <% } %>">
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" />
+  </div>
 
-  <label for="password">Repeat password</label>
-  <input id="password" type="password" name="assword_check" />
+  <div class="<% if (errors.includes("password_check")) { %> error <% } %>">
+    <label for="password">Repeat password</label>
+    <input id="password" type="password" name="password_check" />
+  </div>
 
   <button type="submit">Register</button>
 </form>
@@ -20,3 +30,10 @@
 <footer>
   <p>Already have an account? <a href="/login">Login</a></p>
 </footer>
+
+<style>
+
+  .error input {
+    border: solid 1px red;
+  }
+</style>
