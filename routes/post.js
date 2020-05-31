@@ -1,17 +1,18 @@
+const { validate } = require("email-validator")
 const express = require("express")
 const router = express.Router()
 
-const { validate } = require("email-validator")
+const User = require("../models/User.js")
 
 router.post("/userLogin", (req, res) => {})
 
-router.post("/userRegister", (req, res) => {
+router.post("/userRegister", async (req, res) => {
   const { email, name, age, password, password_check } = req.body
   const inputErrors = []
 
   // No error messages, just logic for making the borders red
 
-  if (!email || !validate(email)) {
+  if (!email || !validate(email) || !!(await User.findOne({ email }))) {
     inputErrors.push("email")
   }
 
@@ -30,10 +31,19 @@ router.post("/userRegister", (req, res) => {
 
   // If errors render register with errors
   if (inputErrors.length > 0) {
-    return res.render("register", { errors: inputErrors, values: req.body })
-  }
+    res.render("register", { errors: inputErrors, values: req.body })
+  } else {
+    try {
+      const newUser = new User({ email, name, age, password })
+      await newUser.save()
 
-  res.redirect("/")
+      console.log("Added new user to database", newUser)
+    } catch (err) {
+      console.log(err)
+    }
+
+    res.redirect("/")
+  }
 })
 
 module.exports = router

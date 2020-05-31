@@ -5,13 +5,21 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  gender: {
+  email: {
     type: String,
     required: true,
   },
-  sexuality: {
+  password: {
     type: String,
     required: true,
+  },
+  gender: {
+    type: String,
+    required: false,
+  },
+  sexuality: {
+    type: String,
+    required: false,
   },
   bio: {
     type: String,
