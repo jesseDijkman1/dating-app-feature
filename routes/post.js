@@ -11,8 +11,10 @@ router.post("/userLogin", async (req, res) => {
     const foundUser = await User.findOne({ email })
 
     if (foundUser.password == password) {
+      // Store data for rendering and further routing
       req.session.loggedin = true
       req.session.userId = foundUser._id
+      req.session.userName = foundUser.name
 
       res.redirect("/")
     } else {
