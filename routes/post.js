@@ -11,10 +11,13 @@ router.post("/userLogin", async (req, res) => {
     const foundUser = await User.findOne({ email })
 
     if (foundUser.password == password) {
-      // Store data for rendering and further routing
+      // Store current user data
       req.session.loggedin = true
       req.session.userId = foundUser._id
       req.session.userName = foundUser.name
+      req.session.userAge = foundUser.age
+      req.session.userGender = foundUser.gender
+      req.session.userSexuality = foundUser.sexuality
 
       res.redirect("/")
     } else {
@@ -28,7 +31,17 @@ router.post("/userLogin", async (req, res) => {
 })
 
 router.post("/userRegister", async (req, res) => {
-  const { email, name, age, password, password_check } = req.body
+  const {
+    email,
+    name,
+    age,
+    gender,
+    sexuality,
+    password,
+    password_check,
+  } = req.body
+
+  console.log(req.body)
   const inputErrors = []
 
   // No error messages, just logic for making the borders red
@@ -55,7 +68,14 @@ router.post("/userRegister", async (req, res) => {
     res.render("register", { errors: inputErrors, values: req.body })
   } else {
     try {
-      const newUser = new User({ email, name, age, password })
+      const newUser = new User({
+        email,
+        name,
+        age,
+        gender,
+        sexuality,
+        password,
+      })
       await newUser.save()
 
       console.log("Added new user to database", newUser)

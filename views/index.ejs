@@ -5,3 +5,26 @@
     <button>Logout</button>
   </form>
 <% } %>
+
+
+<main>
+  <% if (users.length > 0) { %>
+    <ul class="user-cards">
+      <% users.forEach((user) => { %>
+        <li class="user-card user">
+          
+          <img src="" alt="">
+          <h3 class="user__name"><%= user.name %></h3>
+          <h4 class="user__age"><%= user.age %></h4>
+
+
+          <form class="user-form" action="/resolveSwipe" method="POST">
+            <button type="submit" value="Like" class="user__button--like">Like</button>
+            <button type="submit" value="dislike" class="user__button__dislike">Dislike</button>
+          </form>
+
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</main>
