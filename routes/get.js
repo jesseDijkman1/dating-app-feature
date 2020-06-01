@@ -51,6 +51,8 @@ router.get("/", isLoggedIn, async (req, res) => {
     otherUsers = await userModel.find({
       _id: { $ne: id },
       gender: genderQuery,
+      likesReceived: { $nin: [id] },
+      matches: { $nin: [id] },
       sexuality,
     })
   } catch (err) {
@@ -66,7 +68,36 @@ router.get("/", isLoggedIn, async (req, res) => {
   })
 })
 
-router.get("/matches", isLoggedIn, (req, res) => {})
+router.get("/matches", isLoggedIn, async (req, res) => {
+  const id = req.session.userId
+  try {
+    const { matches = [] } = await userModel.findById(id)
+
+    const usersPromises = matches.map(async (matchId) => {
+      return new Promise((resolve, reject) => {
+        void (async function () {
+          try {
+            resolve(await userModel.findById(matchId))
+          } catch (err) {
+            reject(err)
+          }
+        })()
+      })
+    })
+
+    const users = await Promise.all(usersPromises)
+
+    res.render("matches", {
+      user: {
+        id: req.session.userId,
+        name: req.session.userName,
+      },
+      matches: users || [],
+    })
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 router.get("/login", isLoggedOut, (req, res) => {
   res.render("login", { errors: [], values: {} })

@@ -6,7 +6,6 @@ const User = require("../models/User.js")
 
 router.post("/userLogin", async (req, res) => {
   const { email, password } = req.body
-
   try {
     const foundUser = await User.findOne({ email })
 
@@ -41,7 +40,6 @@ router.post("/userRegister", async (req, res) => {
     password_check,
   } = req.body
 
-  console.log(req.body)
   const inputErrors = []
 
   // No error messages, just logic for making the borders red
@@ -51,7 +49,7 @@ router.post("/userRegister", async (req, res) => {
   }
 
   // Extremely simple name validation (must be letters, and atleast 2)
-  if (!name || !new RegExp(/[A-Za-z]{2,}\s?[A-Za-z]{2,}/).test(name)) {
+  if (!name || !new RegExp(/[A-Za-z]{1,}\s?[A-Za-z]{1,}/).test(name)) {
     inputErrors.push("name")
   }
 
@@ -90,9 +88,56 @@ router.post("/userRegister", async (req, res) => {
 router.post("/logout", (req, res) => {
   req.session.destroy()
 
-  console.log("ok", req.ression)
-
   res.redirect("/login")
 })
 
+router.post("/like", async (req, res) => {
+  // Get the likes given likes of the liked user
+  const currentUserId = req.session.userId
+  const likedUserId = req.body.id
+
+  const likedUser = await User.findById(likedUserId)
+  const currentUser = await User.findById(currentUserId)
+
+  // It's a match
+  if (
+    Array.isArray(likedUser.likesGiven) &&
+    likedUser.likesGiven.includes(currentUserId)
+  ) {
+    if (likedUser.matches == undefined) likedUser.matches = []
+    if (currentUser.matches == undefined) currentUser.matches = []
+
+    // Store match in liked user
+    likedUser.matches.push(currentUserId)
+    likedUser.likesGiven = likedUser.likesGiven.filter(
+      (_id) => _id != currentUserId
+    )
+    likedUser.save()
+
+    // Store match in current user
+    currentUser.matches.push(likedUserId)
+    currentUser.likesReceived = currentUser.likesReceived.filter(
+      (_id) => _id != likedUserId
+    )
+    currentUser.save()
+
+    res.status(200)
+    res.redirect("/")
+    return
+  }
+
+  if (likedUser.likesReceived == undefined) likedUser.likesReceived = []
+  if (currentUser.likesGiven == undefined) currentUser.likesGiven = []
+
+  console.log(currentUser.likesGiven)
+
+  likedUser.likesReceived.push(currentUserId)
+  currentUser.likesGiven.push(likedUserId)
+
+  likedUser.save()
+  currentUser.save()
+
+  res.status(200)
+  res.redirect("/")
+})
 module.exports = router

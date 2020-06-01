@@ -37,6 +37,14 @@ const Schema = new mongoose.Schema({
     type: Array,
     default: undefined,
   },
+  likesGiven: {
+    type: Array,
+    default: undefined,
+  },
+  likesReceived: {
+    type: Array,
+    default: undefined,
+  },
 })
 
 const User = mongoose.model("User", Schema)
