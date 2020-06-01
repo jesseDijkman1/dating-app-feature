@@ -155,4 +155,37 @@ router.post("/like", async (req, res) => {
   res.status(200)
   res.redirect("/")
 })
+
+function isAuthorized(req, res, next) {
+  const { chatId, userId, text } = req.body
+
+  if (userId == req.session.userId) {
+    return next()
+  }
+
+  return res.status(401).end()
+}
+
+router.post("/message", isAuthorized, async (req, res) => {
+  const { chatId, text } = req.body
+
+  try {
+    const match = await Match.findById(chatId)
+
+    match.messages.push({
+      userId: req.session.userId,
+      content: text,
+      date: new Date(Date.now()),
+    })
+    match.save()
+
+    res.status(200)
+    res.redirect(`/chat/${chatId}`)
+  } catch (error) {
+    console.log(error)
+
+    res.status(500).end()
+  }
+})
+
 module.exports = router

@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 const userModel = require("../models/User.js")
+const Match = require("../models/Match.js")
 
 // Authentication Middleware
 function isLoggedIn(req, res, next) {
@@ -23,8 +24,6 @@ function isLoggedOut(req, res, next) {
 router.get("/", isLoggedIn, async (req, res) => {
   // Get other users for matching page
   const id = req.session.userId
-  const age = req.session.userAge
-  const name = req.session.userName
   const sexuality = req.session.userSexuality
   const gender = req.session.userGender
 
@@ -52,7 +51,7 @@ router.get("/", isLoggedIn, async (req, res) => {
       _id: { $ne: id },
       gender: genderQuery,
       likesReceived: { $nin: [id] },
-      matches: { $nin: [id] },
+      matches: { $nin: id },
       sexuality,
     })
   } catch (err) {
@@ -97,6 +96,38 @@ router.get("/matches", isLoggedIn, async (req, res) => {
   } catch (error) {
     console.log(error)
   }
+})
+
+async function isMatched(req, res, next) {
+  const id = req.session.userId
+  const chatId = req.params.id
+
+  try {
+    const user = await userModel.findById(id)
+
+    const found = user.matches.find(({ matchId }) => matchId == chatId)
+
+    if (!found) return res.status(401).end()
+
+    next()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+router.get("/chat/:id", isLoggedIn, isMatched, async (req, res) => {
+  const matchId = req.params.id
+  const { users, messages } = await Match.findById(matchId)
+
+  const otherUserId = users.filter((u) => u != req.session.userId).join()
+  const otherUser = await userModel.findById(otherUserId)
+
+  res.render("chat", {
+    matchId,
+    userId: req.session.userId,
+    otherUser,
+    messages,
+  })
 })
 
 router.get("/login", isLoggedOut, (req, res) => {

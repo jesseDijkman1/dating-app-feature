@@ -1,0 +1,22 @@
+<header>
+  <h4><%= otherUser.name %></h4>
+</header>
+<main>
+  <ul>
+    <% messages.forEach(message => { %>
+    <li class="message <% if (message.userId == userId) { %>message--mine<% } %>">
+        <p><%= message.content %></p>
+        <small><%= message.date %></small>
+      </li>
+    <% }) %>
+  </ul>
+</main>
+
+<footer>
+  <form action="/message" method="POST">
+    <input type="hidden" name="chatId" value="<%= matchId %>">
+    <input type="hidden" name="userId" value="<%= userId %>">
+    <input type="text" name="text">
+    <button type="submit">Send</button>
+  </form>
+</footer>
