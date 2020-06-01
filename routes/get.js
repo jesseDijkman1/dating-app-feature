@@ -22,27 +22,37 @@ function isLoggedOut(req, res, next) {
 
 router.get("/", isLoggedIn, async (req, res) => {
   // Get other users for matching page
+  const id = req.session.userId
   const age = req.session.userAge
   const name = req.session.userName
-
   const sexuality = req.session.userSexuality
   const gender = req.session.userGender
 
   // For now only filter by sexuality and gender
-  let users
+  let otherUsers
   try {
     let genderQuery
     if (sexuality == "heterosexual") {
-      if (gender == "male") genderQuery = "female"
+      if (gender == "male") {
+        genderQuery = "female"
+      } else {
+        genderQuery = "male"
+      }
     } else if (sexuality == "homosexual") {
-      if (gender == "male") genderQuery = "male"
+      if (gender == "male") {
+        genderQuery = "male"
+      } else {
+        genderQuery = "female"
+      }
     } else {
       genderQuery = /female|male/i
     }
 
-    console.log(genderQuery)
-
-    users = await userModel.find({ gender: genderQuery })
+    otherUsers = await userModel.find({
+      _id: { $ne: id },
+      gender: genderQuery,
+      sexuality,
+    })
   } catch (err) {
     console.log(err)
   }
@@ -52,9 +62,11 @@ router.get("/", isLoggedIn, async (req, res) => {
       id: req.session.userId,
       name: req.session.userName,
     },
-    users: users || [],
+    users: otherUsers || [],
   })
 })
+
+router.get("/matches", isLoggedIn, (req, res) => {})
 
 router.get("/login", isLoggedOut, (req, res) => {
   res.render("login", { errors: [], values: {} })

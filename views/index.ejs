@@ -12,16 +12,25 @@
     <ul class="user-cards">
       <% users.forEach((user) => { %>
         <li class="user-card user">
+          <% if (user.gender == "male") { %>
+            <img src="https://w7.pngwing.com/pngs/980/886/png-transparent-male-portrait-avatar-computer-icons-icon-design-avatar-flat-face-icon-people-head-cartoon.png ">
+          <% } else { %>
+            <img src="https://image.flaticon.com/icons/png/512/219/219969.png">
+          <% } %>
           
-          <img src="" alt="">
           <h3 class="user__name"><%= user.name %></h3>
           <h4 class="user__age"><%= user.age %></h4>
 
 
-          <form class="user-form" action="/resolveSwipe" method="POST">
-            <button type="submit" value="Like" class="user__button--like">Like</button>
-            <button type="submit" value="dislike" class="user__button__dislike">Dislike</button>
+          <form class="user-form" action="/like" method="POST">
+            <input type="hidden" name="id" value="<%= user.id %>">
+            <button type="submit" class="user__button--like">Like</button>
           </form>
+          <form class="user-form" action="/dislike" method="POST">
+            <input type="hidden" name="id" value="<%= user.id %>">
+            <button type="submit" class="user__button__dislike">Dislike</button>
+          </form>
+          
 
         </li>
       <% }) %>
