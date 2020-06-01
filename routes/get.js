@@ -73,11 +73,11 @@ router.get("/matches", isLoggedIn, async (req, res) => {
   try {
     const { matches = [] } = await userModel.findById(id)
 
-    const usersPromises = matches.map(async (matchId) => {
+    const usersPromises = matches.map(async ({ userId, matchId }) => {
       return new Promise((resolve, reject) => {
         void (async function () {
           try {
-            resolve(await userModel.findById(matchId))
+            resolve([await userModel.findById(userId), matchId])
           } catch (err) {
             reject(err)
           }

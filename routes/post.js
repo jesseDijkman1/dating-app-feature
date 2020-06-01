@@ -3,6 +3,7 @@ const express = require("express")
 const router = express.Router()
 
 const User = require("../models/User.js")
+const Match = require("../models/Match.js")
 
 router.post("/userLogin", async (req, res) => {
   const { email, password } = req.body
@@ -107,15 +108,31 @@ router.post("/like", async (req, res) => {
     if (likedUser.matches == undefined) likedUser.matches = []
     if (currentUser.matches == undefined) currentUser.matches = []
 
+    const existingMatch = await Match.find({
+      users: { $in: [currentUserId, likedUserId] },
+    })
+
+    if (existingMatch.length > 0) console.log("Already matched")
+
+    const match = new Match({
+      users: [currentUserId, likedUserId],
+      messages: [],
+    })
+
+    match.save()
+
     // Store match in liked user
-    likedUser.matches.push(currentUserId)
+    likedUser.matches.push({ userId: currentUserId, matchId: match._id })
     likedUser.likesGiven = likedUser.likesGiven.filter(
       (_id) => _id != currentUserId
     )
     likedUser.save()
 
     // Store match in current user
-    currentUser.matches.push(likedUserId)
+    currentUser.matches.push({
+      userId: likedUserId,
+      matchId: match._id,
+    })
     currentUser.likesReceived = currentUser.likesReceived.filter(
       (_id) => _id != likedUserId
     )
@@ -128,8 +145,6 @@ router.post("/like", async (req, res) => {
 
   if (likedUser.likesReceived == undefined) likedUser.likesReceived = []
   if (currentUser.likesGiven == undefined) currentUser.likesGiven = []
-
-  console.log(currentUser.likesGiven)
 
   likedUser.likesReceived.push(currentUserId)
   currentUser.likesGiven.push(likedUserId)
