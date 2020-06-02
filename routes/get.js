@@ -121,6 +121,8 @@ router.get("/chat/:id", isLoggedIn, isMatched, async (req, res) => {
   const matchId = req.params.id
   const { users, messages } = await Match.findById(matchId)
 
+  console.log(messages)
+
   const otherUserId = users.filter((u) => u != req.session.userId).join()
   const otherUser = await userModel.findById(otherUserId)
 
@@ -163,6 +165,36 @@ router.get("/giphy/trending", async (req, res) => {
   const response = await axios.get(url)
 
   res.json(response.data)
+})
+
+router.get("/chat/:id/giphy", async (req, res) => {
+  const matchId = req.params.id
+
+  // Get the seached query (if it exists)
+  const searchQuery = req.query.query || undefined
+
+  if (!searchQuery) {
+    // Get the trending giphys
+    const url = `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.GIPHY_API_KEY}`
+
+    const response = await axios.get(url)
+
+    console.log(response)
+
+    const giphys = response.data.data.map((giphy) => {
+      return {
+        alt: giphy.title,
+        src: giphy.images.original.url,
+        id: giphy.id,
+      }
+    })
+
+    res.render("giphy-overview", {
+      matchId,
+      userId: req.session.userId,
+      giphys,
+    })
+  }
 })
 
 router.get("/*", (req, res) => {

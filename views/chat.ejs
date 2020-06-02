@@ -16,13 +16,8 @@
   </ul>
 </main>
 
-<div id="giphy-grid" data-user-id="<%= userId %>" data-match-id="<%= matchId %>">None found</div>
-
 <footer>
-
-  
-  <button id="giphy-open">GIPHY</button>
-  <input id="giphy-search-input" type="text">
+  <a href="/chat/<%= matchId %>/giphy">GIPHY</a>
 
   <form action="/message" method="POST">
     <input type="hidden" name="chatId" value="<%= matchId %>">
@@ -30,11 +25,4 @@
     <input type="text" name="text">
     <button type="submit">Send</button>
   </form>
-
-  
-    
-
-    
-    
-  
 </footer>
