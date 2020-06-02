@@ -21,13 +21,7 @@ router.post("/like", isAuthorized, isAlreadyMatch, async (req, res) => {
   }
 
   // It's a match
-  if (
-    Array.isArray(otherUser.likesGiven) &&
-    otherUser.likesGiven.includes(userId)
-  ) {
-    if (otherUser.matches == undefined) otherUser.matches = []
-    if (user.matches == undefined) user.matches = []
-
+  if (otherUser.likesGiven.includes(userId)) {
     const match = new Match({
       users: [userId, otherUserId],
       messages: [],
@@ -37,30 +31,24 @@ router.post("/like", isAuthorized, isAlreadyMatch, async (req, res) => {
 
     // Store match in other user
     otherUser.matches.push({ userId: userId, matchId: match._id })
-    otherUser.likesGiven = otherUser.likesGiven.filter((_id) => _id != userId)
-    otherUser.save()
 
     // Store match in current user
     user.matches.push({
       userId: otherUserId,
       matchId: match._id,
     })
-    user.likesReceived = user.likesReceived.filter((_id) => _id != otherUserId)
-    user.save()
-
-    res.status(200).redirect("/matches")
   }
-
-  if (otherUser.likesReceived == undefined) otherUser.likesReceived = []
-  if (user.likesGiven == undefined) user.likesGiven = []
 
   otherUser.likesReceived.push(userId)
   user.likesGiven.push(otherUserId)
 
-  otherUser.save()
-  user.save()
+  try {
+    await Promise.all([otherUser.save(), user.save()])
 
-  res.status(200).redirect("/")
+    res.status(200).redirect("/")
+  } catch (err) {
+    res.status(500).send("Internal Server Error")
+  }
 })
 
 module.exports = router
