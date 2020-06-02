@@ -1,99 +1,65 @@
+const axios = require("axios")
 const express = require("express")
 const router = express.Router()
 
-const userModel = require("../models/User.js")
+// Middleware
+const { isLoggedIn, isMatched, isAuthorized } = require("../middleware")
+
+// Models
+const User = require("../models/User.js")
 const Match = require("../models/Match.js")
 
-function isLoggedIn(req, res, next) {
-  if (req.session.loggedin) {
-    return next()
-  }
-
-  res.redirect("/login")
-}
-
-function isLoggedOut(req, res, next) {
-  if (!req.session.loggedin) {
-    return next()
-  }
-
-  res.redirect("/")
-}
-
-async function isMatched(req, res, next) {
-  const id = req.session.userId
-  const chatId = req.params.id
-
-  try {
-    const user = await userModel.findById(id)
-
-    const found = user.matches.find(({ matchId }) => matchId == chatId)
-
-    if (!found) return res.status(401).end()
-
-    next()
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-function isAuthorized(req, res, next) {
-  const { userId } = req.body
-
-  if (userId == req.session.userId) {
-    return next()
-  }
-
-  return res.status(401).end()
-}
-
+// Chat Page
 router.get("/:id", isLoggedIn, isMatched, async (req, res) => {
   const matchId = req.params.id
-  const { users, messages } = await Match.findById(matchId).sort({
-    date: "descending",
-  })
-
-  const otherUserId = users.filter((u) => u != req.session.userId).join()
-  const otherUser = await userModel.findById(otherUserId)
-
-  res.render("chat", {
-    matchId,
-    userId: req.session.userId,
-    otherUser,
-    messages,
-  })
-})
-
-router.post("/message", isAuthorized, async (req, res) => {
-  const { chatId, text } = req.body
+  const userId = req.session.userId
 
   try {
-    const match = await Match.findById(chatId)
+    const { users, messages } = await Match.findById(matchId).sort({
+      date: "desc",
+    })
+    const otherUserId = users.filter((uid) => uid != userId)[0]
+    const otherUser = await User.findById(otherUserId)
+
+    const renderData = { matchId, userId, otherUser, messages }
+
+    res.status(200).render("chat", renderData)
+  } catch (error) {
+    console.error(error)
+
+    res.status(400).send("Bad request", error)
+  }
+})
+
+// New Message
+router.post("/message", isAuthorized, async (req, res) => {
+  const { matchId, userId, message } = req.body
+
+  try {
+    const match = await Match.findById(matchId)
 
     match.messages.push({
-      userId: req.session.userId,
-      content: text,
+      userId,
+      message,
       date: new Date(Date.now()),
     })
     match.save()
 
-    res.status(200)
-    res.redirect(`/chat/${chatId}`)
+    res.status(200).redirect(`/chat/${matchId}`)
   } catch (error) {
-    console.log(error)
-
-    res.status(500).end()
+    res.status(400).send("Bad Request", error)
   }
 })
 
+// Giphy Message
 router.post("/message/giphy", isAuthorized, async (req, res) => {
-  const { chatId, giphySrc } = req.body
+  const { matchId, userId, giphySrc } = req.body
 
   try {
-    const match = await Match.findById(chatId)
+    const match = await Match.findById(matchId)
 
     match.messages.push({
-      userId: req.session.userId,
+      userId,
       content: null,
       giphySrc,
       date: new Date(Date.now()),
@@ -101,30 +67,24 @@ router.post("/message/giphy", isAuthorized, async (req, res) => {
 
     match.save()
 
-    res.status(200)
-    res.redirect(`/chat/${chatId}`)
+    res.status(200).redirect(`/chat/${matchId}`)
   } catch (error) {
-    console.log(error)
-
-    res.status(500).end()
+    res.status(400).send("Bad Request", error)
   }
 })
 
+// This route exists to make it possible to send giphys without relying on JavaScript
 router.get("/:id/giphy", isLoggedIn, isMatched, async (req, res) => {
   const matchId = req.params.id
+  const userId = req.session.userId
+  const searchQuery = req.query.search || undefined
 
-  // Get the seached query (if it exists)
-  const searchQuery = req.query.query || undefined
-
+  // If no search query => show trending giphies
   if (!searchQuery) {
-    // Get the trending giphys
     const url = `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.GIPHY_API_KEY}`
-
     const response = await axios.get(url)
 
-    console.log(response)
-
-    const giphys = response.data.data.map((giphy) => {
+    const giphies = response.data.data.map((giphy) => {
       return {
         alt: giphy.title,
         src: giphy.images.original.url,
@@ -132,10 +92,10 @@ router.get("/:id/giphy", isLoggedIn, isMatched, async (req, res) => {
       }
     })
 
-    res.render("giphy-overview", {
-      matchId,
-      userId: req.session.userId,
-      giphys,
-    })
+    const renderData = { matchId, userId, giphies }
+
+    res.render("giphy-overview", renderData)
   }
 })
+
+module.exports = router
