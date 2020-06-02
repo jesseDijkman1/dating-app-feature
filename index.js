@@ -28,6 +28,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(expressLayouts)
 app.set("view engine", "ejs")
 
+// Static Files
+app.use(express.static("src"))
+
 // GET Routes
 app.use(require("./routes/get.js"))
 
