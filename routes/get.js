@@ -119,9 +119,9 @@ async function isMatched(req, res, next) {
 
 router.get("/chat/:id", isLoggedIn, isMatched, async (req, res) => {
   const matchId = req.params.id
-  const { users, messages } = await Match.findById(matchId)
-
-  console.log(messages)
+  const { users, messages } = await Match.findById(matchId).sort({
+    date: "descending",
+  })
 
   const otherUserId = users.filter((u) => u != req.session.userId).join()
   const otherUser = await userModel.findById(otherUserId)
