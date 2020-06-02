@@ -2,27 +2,15 @@ const { validate } = require("email-validator")
 const express = require("express")
 const router = express.Router()
 
+// Middleware
+const { isLoggedOut } = require("../middleware")
+
+// Models
 const User = require("../models/User.js")
 
-function isLoggedIn(req, res, next) {
-  if (req.session.loggedin) {
-    return next()
-  }
-
-  res.redirect("/login")
-}
-
-function isLoggedOut(req, res, next) {
-  if (!req.session.loggedin) {
-    return next()
-  }
-
-  res.redirect("/")
-}
-
-router.get("/register", isLoggedOut, (req, res) => {
-  res.render("register", { errors: [], values: {} })
-})
+router.get("/", isLoggedOut, (req, res) =>
+  res.status(200).render("register", { errors: [], values: {} })
+)
 
 router.post("/", async (req, res) => {
   const {
@@ -58,24 +46,29 @@ router.post("/", async (req, res) => {
 
   // If errors render register with errors
   if (inputErrors.length > 0) {
-    res.render("register", { errors: inputErrors, values: req.body })
-  } else {
-    try {
-      const newUser = new User({
-        email,
-        name,
-        age,
-        gender,
-        sexuality,
-        password,
-      })
-      await newUser.save()
+    const renderData = { errors: inputErrors, values: req.body }
 
-      console.log("Added new user to database", newUser)
-    } catch (err) {
-      console.log(err)
-    }
+    return res.status(400).render("register", renderData)
+  }
 
-    res.redirect("/")
+  try {
+    const newUser = new User({
+      email,
+      name,
+      age,
+      gender,
+      sexuality,
+      password,
+      likesReceived: [],
+      likesGiven: [],
+      matches: [],
+    })
+    await newUser.save()
+
+    res.status(200).redirect("/login")
+  } catch (err) {
+    res.status(500).send("Internal Server Error")
   }
 })
+
+module.exports = router
