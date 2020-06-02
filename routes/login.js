@@ -1,27 +1,26 @@
 const express = require("express")
 const router = express.Router()
 
+// Middleware
+const { isLoggedOut } = require("../middleware")
+
+// Models
 const User = require("../models/User.js")
 
-function isLoggedOut(req, res, next) {
-  if (!req.session.loggedin) {
-    return next()
-  }
+// Login Page
+router.get("/", isLoggedOut, (req, res) =>
+  res.status(200).render("login", { errors: [], values: {} })
+)
 
-  res.redirect("/")
-}
-
-router.get("/login", isLoggedOut, (req, res) => {
-  res.render("login", { errors: [], values: {} })
-})
-
-router.post("/userLogin", async (req, res) => {
+// Login Request
+router.post("/", async (req, res) => {
   const { email, password } = req.body
+
   try {
     const foundUser = await User.findOne({ email })
 
     if (foundUser.password == password) {
-      // Store current user data
+      // Store current user data in session
       req.session.loggedin = true
       req.session.userId = foundUser._id
       req.session.userName = foundUser.name
@@ -29,19 +28,15 @@ router.post("/userLogin", async (req, res) => {
       req.session.userGender = foundUser.gender
       req.session.userSexuality = foundUser.sexuality
 
-      res.redirect("/")
+      res.status(200).redirect("/")
     } else {
-      res.render("login", { errors: ["password"], values: { email } })
+      const renderData = { errors: ["password"], values: { email } }
+      res.status(401).render("login", renderData)
     }
   } catch (err) {
-    console.log("Error", err)
-
-    res.render("login", { errors: ["email"], values: { email } })
+    const renderData = { errors: ["email"], values: { email } }
+    res.status(401).render("login", renderData)
   }
 })
 
-router.post("/logout", (req, res) => {
-  req.session.destroy()
-
-  res.redirect("/login")
-})
+module.exports = router
