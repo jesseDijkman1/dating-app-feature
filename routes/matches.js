@@ -1,35 +1,66 @@
 const express = require("express")
 const router = express.Router()
 
-const userModel = require("../models/User.js")
+// Middleware
+const { isLoggedIn } = require("../middleware")
 
-router.get("/matches", isLoggedIn, async (req, res) => {
+// Model
+const User = require("../models/User.js")
+const Match = require("../models/Match.js")
+
+router.get("/", isLoggedIn, async (req, res) => {
   const id = req.session.userId
+
+  let user
   try {
-    const { matches = [] } = await userModel.findById(id)
-
-    const usersPromises = matches.map(async ({ userId, matchId }) => {
-      return new Promise((resolve, reject) => {
-        void (async function () {
-          try {
-            resolve([await userModel.findById(userId), matchId])
-          } catch (err) {
-            reject(err)
-          }
-        })()
-      })
-    })
-
-    const users = await Promise.all(usersPromises)
-
-    res.render("matches", {
-      user: {
-        id: req.session.userId,
-        name: req.session.userName,
-      },
-      matches: users || [],
-    })
+    user = await User.findById(id)
   } catch (error) {
-    console.log(error)
+    return res.status(500).send("Internal Server Error")
+  }
+
+  const usersPromises = user.matches.map(({ userId, matchId }) => {
+    return new Promise((resolve, reject) => {
+      void (async () => {
+        try {
+          const _user = await User.findById(userId)
+
+          // If the matched user doesn't exist, remove from match
+          if (!_user) {
+            try {
+              await Match.findOneAndDelete({ _id: matchId })
+            } catch (error) {
+              console.log(
+                "Something went wrong while trying to delete match",
+                matchId
+              )
+            }
+
+            user.matches = user.matches.filter(
+              (matchObj) => matchObj.userId != userId
+            )
+            user.save()
+
+            resolve(null)
+          }
+
+          resolve({ ...(await User.findById(userId))._doc, matchId })
+        } catch (error) {
+          reject(error)
+        }
+      })()
+    })
+  })
+
+  try {
+    const users = await Promise.all(usersPromises)
+    const filteredUsers = users.filter((user) => user != null)
+
+    const renderData = { matches: filteredUsers || [] }
+
+    res.render("matches", renderData)
+  } catch (error) {
+    res.status(500).send("Internal Server Error", error)
   }
 })
+
+module.exports = router
