@@ -4,15 +4,19 @@
 <main>
   <ul>
     <% messages.forEach(message => { %>
-    <li class="message <% if (message.userId == userId) { %>message--mine<% } %>">
+      <li class="message <% if (message.userId == userId) { %>message--mine<% } %>">
+        <% if (message.content == null && !!message.giphySrc) { %>
+          <img src="<%= message.giphySrc %>">
+        <% } else { %>
         <p><%= message.content %></p>
         <small><%= message.date %></small>
+        <% } %>
       </li>
     <% }) %>
   </ul>
 </main>
 
-<div id="giphy-grid">None found</div>
+<div id="giphy-grid" data-user-id="<%= userId %>" data-match-id="<%= matchId %>">None found</div>
 
 <footer>
 

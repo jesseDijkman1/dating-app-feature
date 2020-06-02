@@ -188,4 +188,30 @@ router.post("/message", isAuthorized, async (req, res) => {
   }
 })
 
+router.post("/message/giphy", isAuthorized, async (req, res) => {
+  const { chatId, giphySrc } = req.body
+
+  console.log(chatId, giphySrc)
+
+  try {
+    const match = await Match.findById(chatId)
+
+    match.messages.push({
+      userId: req.session.userId,
+      content: null,
+      giphySrc,
+      date: new Date(Date.now()),
+    })
+
+    match.save()
+
+    res.status(200)
+    res.redirect(`/chat/${chatId}`)
+  } catch (error) {
+    console.log(error)
+
+    res.status(500).end()
+  }
+})
+
 module.exports = router
