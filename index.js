@@ -32,15 +32,20 @@ app.set("view engine", "ejs")
 app.use("/src", express.static("src"))
 
 // Routes
+app.use(require("./routes"))
 app.use("/chat", require("./routes/chat"))
 app.use("/register", require("./routes/register"))
 app.use("/login", require("./routes/login"))
-app.use("/match", require("./routes/match"))
+app.use("/user", require("./routes/user"))
+app.use("/matches", require("./routes/matches"))
+app.use("/giphy", require("./routes/giphy"))
 
 // 404
-app.get("*", (req, res) => {
-  res.status(404)
-  res.send("404 page not found")
+app.use("/*", require("./routes/404"))
+
+app.post("/logout", (req, res) => {
+  req.session.destroy()
+  res.redirect("/login")
 })
 
 app.listen(PORT, async () => {
