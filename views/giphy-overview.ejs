@@ -1,3 +1,11 @@
+<form action="/giphy/search" method="POST">
+  <input type="hidden" name="matchId" value="<%= matchId %>">
+  <input type="hidden" name="userId" value="<%= userId %>">
+
+  <input name="query" type="text" placeholder="Search ...">
+  <button type="submit">Search</button>
+</form>
+
 <form action="/chat/message/giphy" method="POST">
   <input type="hidden" name="matchId" value="<%= matchId %>">
   <input type="hidden" name="userId" value="<%= userId %>">
