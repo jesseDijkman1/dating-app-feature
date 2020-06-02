@@ -1,3 +1,4 @@
+const axios = require("axios")
 const express = require("express")
 const router = express.Router()
 
@@ -47,11 +48,12 @@ router.get("/", isLoggedIn, async (req, res) => {
       genderQuery = /female|male/i
     }
 
+    // Need to fix that matched users still show up in the list (maches needs to be split up into two array matchIds and userIds)
     otherUsers = await userModel.find({
       _id: { $ne: id },
       gender: genderQuery,
       likesReceived: { $nin: [id] },
-      matches: { $nin: id },
+      matches: { $nin: [id] },
       sexuality,
     })
   } catch (err) {
@@ -142,6 +144,25 @@ router.get("/logout", (req, res) => {
   req.session.destroy()
 
   res.redirect("/login")
+})
+
+// router.get("/test", async (req, res) => {
+//   const url =
+
+//   try {
+//     const data = await axios.get(url)
+//     console.log(data.data)
+//   } catch (error) {
+//     console.log(error)
+//   }
+// })
+
+router.get("/giphy/trending", async (req, res) => {
+  const url = `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.GIPHY_API_KEY}`
+
+  const response = await axios.get(url)
+
+  res.json(response.data)
 })
 
 router.get("/*", (req, res) => {

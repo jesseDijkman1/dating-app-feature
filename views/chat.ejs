@@ -12,11 +12,25 @@
   </ul>
 </main>
 
+<div id="giphy-grid">None found</div>
+
 <footer>
+
+  
+  <button id="giphy-open">GIPHY</button>
+  <input id="giphy-search-input" type="text">
+
   <form action="/message" method="POST">
     <input type="hidden" name="chatId" value="<%= matchId %>">
     <input type="hidden" name="userId" value="<%= userId %>">
     <input type="text" name="text">
     <button type="submit">Send</button>
   </form>
+
+  
+    
+
+    
+    
+  
 </footer>
