@@ -29,13 +29,19 @@ app.use(expressLayouts)
 app.set("view engine", "ejs")
 
 // Static Files
-app.use("/static", express.static("src"))
+app.use("/src", express.static("src"))
 
-// GET Routes
-app.use(require("./routes/get.js"))
+// Routes
+app.use("/chat", require("./routes/chat"))
+app.use("/register", require("./routes/register"))
+app.use("/login", require("./routes/login"))
+app.use("/match", require("./routes/match"))
 
-// POST Routes
-app.use(require("./routes/post.js"))
+// 404
+app.get("*", (req, res) => {
+  res.status(404)
+  res.send("404 page not found")
+})
 
 app.listen(PORT, async () => {
   console.log(`Listening to port: ${PORT}`)
