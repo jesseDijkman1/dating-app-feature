@@ -1,4 +1,4 @@
-<form action="userRegister" method="POST">
+<form action="register" method="POST">
   <div class="<% if (errors.includes("email")) { %> error <% } %>">
     <label for="email">Email</label>
     <input required id="email" type="email" name="email" value="<%= values.email %>" />

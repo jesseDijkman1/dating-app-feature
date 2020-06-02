@@ -7,8 +7,7 @@ const { isLoggedIn } = require("../middleware")
 // Models
 const User = require("../models/User.js")
 
-// Gender Query Helper
-function getGenderQuery(sexuality, gender) {
+function getMatchingGender(sexuality, gender) {
   /*eslint indent: 0*/
   /*eslint no-unreachable: 0*/
 
@@ -36,9 +35,8 @@ router.get("/", isLoggedIn, async (req, res) => {
     const otherUsers =
       (await User.find({
         _id: { $ne: userId },
-        gender: getGenderQuery(userSexuality, userGender),
+        gender: getMatchingGender(userSexuality, userGender),
         likesReceived: { $nin: [userId] },
-        matches: { $nin: [userId] },
         sexuality: userSexuality,
       })) || []
 

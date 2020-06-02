@@ -8,6 +8,7 @@ const { isAuthorized, isAlreadyMatch } = require("../middleware")
 const User = require("../models/User.js")
 const Match = require("../models/Match.js")
 
+// User like
 router.post("/like", isAuthorized, isAlreadyMatch, async (req, res) => {
   const userId = req.body.userId
   const otherUserId = req.body.otherUserId
@@ -39,6 +40,7 @@ router.post("/like", isAuthorized, isAlreadyMatch, async (req, res) => {
     })
   }
 
+  // Save like
   otherUser.likesReceived.push(userId)
   user.likesGiven.push(otherUserId)
 

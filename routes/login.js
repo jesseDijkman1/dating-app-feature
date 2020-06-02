@@ -12,7 +12,7 @@ router.get("/", isLoggedOut, (req, res) =>
   res.status(200).render("login", { errors: [], values: {} })
 )
 
-// Login Request
+// Login User
 router.post("/", async (req, res) => {
   const { email, password } = req.body
 
@@ -28,11 +28,12 @@ router.post("/", async (req, res) => {
       req.session.userGender = foundUser.gender
       req.session.userSexuality = foundUser.sexuality
 
-      res.status(200).redirect("/")
-    } else {
-      const renderData = { errors: ["password"], values: { email } }
-      res.status(401).render("login", renderData)
+      return res.status(200).redirect("/")
     }
+
+    const renderData = { errors: ["password"], values: { email } }
+
+    res.status(401).render("login", renderData)
   } catch (err) {
     const renderData = { errors: ["email"], values: { email } }
     res.status(401).render("login", renderData)

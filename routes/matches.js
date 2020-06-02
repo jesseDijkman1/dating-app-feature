@@ -8,6 +8,7 @@ const { isLoggedIn } = require("../middleware")
 const User = require("../models/User.js")
 const Match = require("../models/Match.js")
 
+// Matches Page
 router.get("/", isLoggedIn, async (req, res) => {
   const id = req.session.userId
 

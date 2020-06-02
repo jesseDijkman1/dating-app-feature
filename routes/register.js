@@ -8,10 +8,12 @@ const { isLoggedOut } = require("../middleware")
 // Models
 const User = require("../models/User.js")
 
+// Register Page
 router.get("/", isLoggedOut, (req, res) =>
   res.status(200).render("register", { errors: [], values: {} })
 )
 
+// Register New User
 router.post("/", async (req, res) => {
   const {
     email,
@@ -63,6 +65,7 @@ router.post("/", async (req, res) => {
       likesGiven: [],
       matches: [],
     })
+
     await newUser.save()
 
     res.status(200).redirect("/login")

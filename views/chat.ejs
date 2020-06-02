@@ -5,10 +5,10 @@
   <ul>
     <% messages.forEach(message => { %>
       <li class="message <% if (message.userId == userId) { %>message--mine<% } %>">
-        <% if (message.content == null && !!message.giphySrc) { %>
+        <% if (message.message == null && !!message.giphySrc) { %>
           <img src="<%= message.giphySrc %>">
         <% } else { %>
-        <p><%= message.content %></p>
+        <p><%= message.message %></p>
         <small><%= message.date %></small>
         <% } %>
       </li>
@@ -19,10 +19,10 @@
 <footer>
   <a href="/chat/<%= matchId %>/giphy">GIPHY</a>
 
-  <form action="/message" method="POST">
-    <input type="hidden" name="chatId" value="<%= matchId %>">
+  <form action="/chat/message" method="POST">
+    <input type="hidden" name="matchId" value="<%= matchId %>">
     <input type="hidden" name="userId" value="<%= userId %>">
-    <input type="text" name="text">
+    <input type="text" name="message">
     <button type="submit">Send</button>
   </form>
 </footer>

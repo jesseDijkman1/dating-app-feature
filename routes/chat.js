@@ -1,6 +1,5 @@
+const router = require("express").Router()
 const axios = require("axios")
-const express = require("express")
-const router = express.Router()
 
 // Middleware
 const { isLoggedIn, isMatched, isAuthorized } = require("../middleware")
@@ -25,8 +24,6 @@ router.get("/:id", isLoggedIn, isMatched, async (req, res) => {
 
     res.status(200).render("chat", renderData)
   } catch (error) {
-    console.error(error)
-
     res.status(400).send("Bad request", error)
   }
 })
@@ -43,7 +40,8 @@ router.post("/message", isAuthorized, async (req, res) => {
       message,
       date: new Date(Date.now()),
     })
-    match.save()
+
+    await match.save()
 
     res.status(200).redirect(`/chat/${matchId}`)
   } catch (error) {
@@ -60,14 +58,17 @@ router.post("/message/giphy", isAuthorized, async (req, res) => {
 
     match.messages.push({
       userId,
-      content: null,
+      message: null,
       giphySrc,
       date: new Date(Date.now()),
     })
 
-    match.save()
-
-    res.status(200).redirect(`/chat/${matchId}`)
+    try {
+      await match.save()
+      res.status(200).redirect(`/chat/${matchId}`)
+    } catch (error) {
+      res.status(500).send("Internal Server Error", error)
+    }
   } catch (error) {
     res.status(400).send("Bad Request", error)
   }
@@ -82,19 +83,21 @@ router.get("/:id/giphy", isLoggedIn, isMatched, async (req, res) => {
   // If no search query => show trending giphies
   if (!searchQuery) {
     const url = `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.GIPHY_API_KEY}`
-    const response = await axios.get(url)
 
-    const giphies = response.data.data.map((giphy) => {
-      return {
+    try {
+      const response = await axios.get(url)
+      const giphies = response.data.data.map((giphy) => ({
         alt: giphy.title,
         src: giphy.images.original.url,
         id: giphy.id,
-      }
-    })
+      }))
 
-    const renderData = { matchId, userId, giphies }
+      const renderData = { matchId, userId, giphies }
 
-    res.render("giphy-overview", renderData)
+      res.status(200).render("giphy-overview", renderData)
+    } catch (error) {
+      res.status(400).send("Bad Request", error)
+    }
   }
 })
 

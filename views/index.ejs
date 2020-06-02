@@ -1,6 +1,6 @@
-<h1>Hello world <%= user.name %></h1>
+<h1>Hello <%= userName %></h1>
 
-<% if ( !!user.id ) { %>
+<% if ( !!userId ) { %>
   <form action="/logout" method="POST">
     <button>Logout</button>
   </form>
@@ -8,30 +8,25 @@
 
 
 <main>
-  <% if (users.length > 0) { %>
+  <% if (otherUsers.length > 0) { %>
     <ul class="user-cards">
-      <% users.forEach((user) => { %>
+      <% otherUsers.forEach((otherUser) => { %>
         <li class="user-card user">
-          <% if (user.gender == "male") { %>
+          <% if (otherUser.gender == "male") { %>
             <img src="https://w7.pngwing.com/pngs/980/886/png-transparent-male-portrait-avatar-computer-icons-icon-design-avatar-flat-face-icon-people-head-cartoon.png ">
           <% } else { %>
             <img src="https://image.flaticon.com/icons/png/512/219/219969.png">
           <% } %>
           
-          <h3 class="user__name"><%= user.name %></h3>
-          <h4 class="user__age"><%= user.age %></h4>
+          <h3 class="user__name"><%= otherUser.name %></h3>
+          <h4 class="user__age"><%= otherUser.age %></h4>
 
 
-          <form class="user-form" action="/like" method="POST">
-            <input type="hidden" name="id" value="<%= user.id %>">
+          <form class="user-form" action="/user/like" method="POST">
+            <input type="hidden" name="userId" value="<%= userId %>">
+            <input type="hidden" name="otherUserId" value="<%= otherUser._id %>">
             <button type="submit" class="user__button--like">Like</button>
           </form>
-          <form class="user-form" action="/dislike" method="POST">
-            <input type="hidden" name="id" value="<%= user.id %>">
-            <button type="submit" class="user__button__dislike">Dislike</button>
-          </form>
-          
-
         </li>
       <% }) %>
     </ul>

@@ -22,16 +22,16 @@ function getTrendingGiphys() {
   })
 }
 
-function giphyElement(imgSrc, giphyId, chatId, userId) {
+function giphyElement(imgSrc, giphyId, matchId, userId) {
   return `
     <form action="/message/giphy" method="POST">
       <input type="hidden" name="giphySrc" value="${imgSrc}">
-      <input type="hidden" name="chatId" value="${chatId}">
+      <input type="hidden" name="matchId" value="${matchId}">
       <input type="hidden" name="userId" value="${userId}">
       <img src="${imgSrc}">
 
       <button type="submit">Send giphy</button>
-    </div>
+    </form>
   `
 }
 
