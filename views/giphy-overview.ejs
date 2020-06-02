@@ -1,8 +1,8 @@
-<form action="/message/giphy" method="POST">
-  <input type="hidden" name="chatId" value="<%= matchId %>">
+<form action="/chat/message/giphy" method="POST">
+  <input type="hidden" name="matchId" value="<%= matchId %>">
   <input type="hidden" name="userId" value="<%= userId %>">
 
-  <% giphys.forEach(giphy => { %>
+  <% giphies.forEach(giphy => { %>
       <label for="<%= giphy.id %>">Select giphy</label>
       <input type="radio" name="giphySrc" value="<%= giphy.src %>" id="<%= giphy.id %>">
       
