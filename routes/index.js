@@ -26,26 +26,23 @@ function getGenderQuery(sexuality, gender) {
 
 // Home Page
 router.get("/", isLoggedIn, async (req, res) => {
-  const id = req.session.userId
-  const name = req.session.userName
-  const sexuality = req.session.userSexuality
-  const gender = req.session.userGender
+  const userId = req.session.userId
+  const userName = req.session.userName
+  const userSexuality = req.session.userSexuality
+  const userGender = req.session.userGender
 
   try {
     // Need to fix that matched users still show up in the list (maches needs to be split up into two array matchIds and userIds)
     const otherUsers =
       (await User.find({
-        _id: { $ne: id },
-        gender: getGenderQuery(sexuality, gender),
-        likesReceived: { $nin: [id] },
-        matches: { $nin: [id] },
-        sexuality,
+        _id: { $ne: userId },
+        gender: getGenderQuery(userSexuality, userGender),
+        likesReceived: { $nin: [userId] },
+        matches: { $nin: [userId] },
+        sexuality: userSexuality,
       })) || []
 
-    const renderData = {
-      user: { id, name },
-      users: otherUsers,
-    }
+    const renderData = { userId, userName, otherUsers }
 
     res.status(200).render("index", renderData)
   } catch (error) {
