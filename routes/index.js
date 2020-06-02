@@ -1,68 +1,56 @@
 const express = require("express")
 const router = express.Router()
 
-const userModel = require("../models/User.js")
+// Middleware
+const { isLoggedIn } = require("../middleware")
 
-// Authentication Middleware
-function isLoggedIn(req, res, next) {
-  if (req.session.loggedin) {
-    return next()
+// Models
+const User = require("../models/User.js")
+
+// Gender Query Helper
+function getGenderQuery(sexuality, gender) {
+  /*eslint indent: 0*/
+  /*eslint no-unreachable: 0*/
+
+  switch (sexuality) {
+    case "heterosexual":
+      return gender == "male" ? "female" : "male"
+      break
+    case "homosexual":
+      return gender == "male" ? "male" : "female"
+    default:
+      return /female|male/i
+      break
   }
-
-  res.redirect("/login")
 }
 
-function isLoggedOut(req, res, next) {
-  if (!req.session.loggedin) {
-    return next()
-  }
-
-  res.redirect("/")
-}
-
+// Home Page
 router.get("/", isLoggedIn, async (req, res) => {
-  // Get other users for matching page
   const id = req.session.userId
+  const name = req.session.userName
   const sexuality = req.session.userSexuality
   const gender = req.session.userGender
 
-  // For now only filter by sexuality and gender
-  let otherUsers
   try {
-    let genderQuery
-    if (sexuality == "heterosexual") {
-      if (gender == "male") {
-        genderQuery = "female"
-      } else {
-        genderQuery = "male"
-      }
-    } else if (sexuality == "homosexual") {
-      if (gender == "male") {
-        genderQuery = "male"
-      } else {
-        genderQuery = "female"
-      }
-    } else {
-      genderQuery = /female|male/i
+    // Need to fix that matched users still show up in the list (maches needs to be split up into two array matchIds and userIds)
+    const otherUsers =
+      (await User.find({
+        _id: { $ne: id },
+        gender: getGenderQuery(sexuality, gender),
+        likesReceived: { $nin: [id] },
+        matches: { $nin: [id] },
+        sexuality,
+      })) || []
+
+    const renderData = {
+      user: { id, name },
+      users: otherUsers,
     }
 
-    // Need to fix that matched users still show up in the list (maches needs to be split up into two array matchIds and userIds)
-    otherUsers = await userModel.find({
-      _id: { $ne: id },
-      gender: genderQuery,
-      likesReceived: { $nin: [id] },
-      matches: { $nin: [id] },
-      sexuality,
-    })
-  } catch (err) {
-    console.log(err)
+    res.status(200).render("index", renderData)
+  } catch (error) {
+    res.status(500).send("Internal Server Error", error)
   }
-
-  res.render("index", {
-    user: {
-      id: req.session.userId,
-      name: req.session.userName,
-    },
-    users: otherUsers || [],
-  })
 })
+
+module.exports = router
