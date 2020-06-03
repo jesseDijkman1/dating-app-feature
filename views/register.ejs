@@ -1,61 +1,62 @@
-<form action="register" method="POST">
-  <div class="<% if (errors.includes("email")) { %> error <% } %>">
-    <label for="email">Email</label>
-    <input required id="email" type="email" name="email" value="<%= values.email %>" />
-  </div>
+<main class="user-form">
+  <form class="user-form__form" action="register" method="POST">
+    <div class="user-form__field <% if (errors.includes("email")) { %> error <% } %>">
+      <label class="user-form__field-label" for="email">Email</label>
+      <input class="user-form__field-input" required id="email" type="email" name="email" value="<%= values.email %>" />
+    </div>
 
-  <div class="<% if (errors.includes("name")) { %> error <% } %>">
-    <label for="name">Name</label>
-    <input required id="name" type="text" name="name" value="<%= values.name %>" />
-  </div>
+    <div class="user-form__field user-form__field--half <% if (errors.includes("name")) { %> error <% } %>">
+      <label class="user-form__field-label" for="name">Name</label>
+      <input class="user-form__field-input" required id="name" type="text" name="name" value="<%= values.name %>" />
+    </div>
 
-  <div class="<% if (errors.includes("age")) { %> error <% } %>">
-    <label for="age">Age</label>
-    <input required id="age" type="number" name="age" value="<%= values.age %>" />
-  </div>
+    <div class="user-form__field user-form__field--half <% if (errors.includes("age")) { %> error <% } %>">
+      <label class="user-form__field-label" for="age">Age</label>
+      <input class="user-form__field-input" required id="age" type="number" name="age" value="<%= values.age %>" />
+    </div>
 
-  <div class="<% if (errors.includes("sexuality")) { %> error <% } %>">
-    <label for="gender">Gender</label>
-    <select name="gender" id="gender">
-      <option value="" selected hidden disabled>...</option>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-    </select>
-  </div>
+    <div class="user-form__field user-form__field--half <% if (errors.includes("sexuality")) { %> error <% } %>">
+      <label class="user-form__field-label" for="gender">Gender</label>
+      <select class="user-form__field-input" name="gender" id="gender">
+        <option value="" selected hidden disabled>...</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
 
-  <div class="<% if (errors.includes("sexuality")) { %> error <% } %>">
-    <label for="sexuality">Sexuality</label>
-    <select name="sexuality" id="sexuality">
-      <option value="" selected hidden disabled>...</option>
-      <option value="heterosexual">Straight</option>
-      <option value="homosexual">Gay</option>
-      <option value="bisexual">Bi</option>
-    </select>
-  </div>
+    <div class="user-form__field user-form__field--half <% if (errors.includes("sexuality")) { %> error <% } %>">
+      <label class="user-form__field-label" for="sexuality">Sexuality</label>
+      <select class="user-form__field-input" name="sexuality" id="sexuality">
+        <option value="" selected hidden disabled>...</option>
+        <option value="heterosexual">Straight</option>
+        <option value="homosexual">Gay</option>
+        <option value="bisexual">Bi</option>
+      </select>
+    </div>
 
-  <hr>
+    <hr>
 
-  <em>All testing accounts have the password: '123'</em>
+    <em>All testing accounts have the password: '123'</em>
 
-  <div class="<% if (errors.includes("password")) { %> error <% } %>">
-    <label for="password">Password</label>
-    <input type="hidden" name="password" value="123">
-    <input id="password" type="text" disabled value="123">
-    <!-- <input value="123" disabled required id="password" type="password" name="password" /> -->
-  </div>
+    <div class="user-form__field <% if (errors.includes("password")) { %> error <% } %>">
+      <label class="user-form__field-label" for="password">Password</label>
+      <input type="hidden" name="password" value="123">
+      <input class="user-form__field-input" id="password" type="text" disabled value="123">
+      <!-- <input value="123" disabled required id="password" type="password" name="password" /> -->
+    </div>
 
-  <div class="<% if (errors.includes("password_check")) { %> error <% } %>">
-    <label for="password_check">Repeat password</label>
-    <input type="hidden" name="password_check" value="123">
-    <input id="password_check" type="text" disabled value="123">
-    <!-- <input value="123" disabled required id="password" type="password" name="password_check" /> -->
-    
-  </div>
+    <div class="user-form__field <% if (errors.includes("password_check")) { %> error <% } %>">
+      <label class="user-form__field-label" for="password_check">Repeat password</label>
+      <input type="hidden" name="password_check" value="123">
+      <input class="user-form__field-input" id="password_check" type="text" disabled value="123">
+      <!-- <input value="123" disabled required id="password" type="password" name="password_check" /> -->
+      
+    </div>
 
-  <button type="submit">Register</button>
-</form>
+    <button class="user-form__submit" type="submit">Register</button>
+  </form>
 
-<footer>
-  <p>Already have an account? <a href="/login">Login</a></p>
-</footer>
-
+  <footer class="user-form__footer">
+    <p>Already have an account? <a href="/login">Login</a></p>
+  </footer>
+</main>
