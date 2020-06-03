@@ -283,8 +283,6 @@ em {
 }
 
 .user-card__button {
-  background: var(--red);
-  color: var(--light-grey);
   font-size: 2.25em;
   padding: 0.35em;
   line-height: 0;
@@ -293,6 +291,14 @@ em {
   color: var(--white-transparent);
 }
 
+.user-card__button--like {
+  background: var(--red);
+}
+
+.user-card__button--chat {
+  background: var(--blue);
+}
+
 .user-card__button:hover {
-  color: white;
+  color: var(--light-grey);
 }
