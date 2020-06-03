@@ -17,17 +17,29 @@
 
     </style>
 
+    <link rel="stylesheet" href="/src/css/main.css">
+
   </head>
   
   <body>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/matches">My matches</a>
-    </nav>
-    <div id="page-container">
+    
+    <div class="page-container">
       <%- body %>
     </div>
+    
+    <footer class="footer-navigation">
+      <nav class="footer-navigation__container">
+        <ul class="footer-navigation__list">
+          <li class="footer-navigation__list-item">
+            <a class="footer-navigation__link" href="/">Home</a>
+          </li>
+          <li class="footer-navigation__list-item">
+            <a class="footer-navigation__link" href="/matches">Matches</a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
 
-    <script src="/static/index.js"></script>
+    <script src="/src/index.js"></script>
   </body>
 </html>
