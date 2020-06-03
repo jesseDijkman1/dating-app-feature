@@ -1,20 +1,26 @@
-<form action="/giphy/search" method="POST">
-  <input type="hidden" name="matchId" value="<%= matchId %>">
-  <input type="hidden" name="userId" value="<%= userId %>">
+<header class="giphy-search-header">
+  <form class="giphy-search-form" action="/giphy/search" method="POST">
+    <input type="hidden" name="matchId" value="<%= matchId %>">
+    <input type="hidden" name="userId" value="<%= userId %>">
 
-  <input name="query" type="text" placeholder="Search ...">
-  <button type="submit">Search</button>
-</form>
+    <input class="giphy-search-form__input" name="query" type="text" placeholder="Search ...">
+    <button class="giphy-search-form__submit" type="submit"><i class="fa fa-search"></i></button>
+  </form>
+</header>
 
-<form action="/chat/message/giphy" method="POST">
+<form class="giphy-grid" action="/chat/message/giphy" method="POST">
   <input type="hidden" name="matchId" value="<%= matchId %>">
   <input type="hidden" name="userId" value="<%= userId %>">
 
   <% giphies.forEach(giphy => { %>
-      <label for="<%= giphy.id %>">Select giphy</label>
-      <input type="radio" name="giphySrc" value="<%= giphy.src %>" id="<%= giphy.id %>">
+    <div class="giphy-grid__item">
+      <input class="visuallyhidden giphy-radio-select" type="radio" name="giphySrc" value="<%= giphy.src %>" id="<%= giphy.id %>">
+      <label class="giphy-grid__item-overlay" for="<%= giphy.id %>"><i class="fa fa-check"></i></label>
       
-      <img src="<%= giphy.src %>" alt="<%= giphy.alt %>">
+      <img class="giphy-grid__item-image"src="<%= giphy.src %>" alt="<%= giphy.alt %>">
+
+      <button class="giphy-submit" type="submit">Send GIPHY</button>
+    </div>
   <% }) %>
-  <button type="submit">Send giphy</button>
+  
 </form>

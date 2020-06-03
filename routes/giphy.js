@@ -30,9 +30,17 @@ router.post("/search", isAuthorized, async (req, res) => {
       id: giphy.id,
     }))
 
-    const renderData = { matchId, userId, giphies }
+    const renderData = {
+      matchId,
+      userId,
+      giphies,
+      otherUser: undefined,
+      previousUrl: `/chat/${matchId}`,
+    }
 
-    res.status(200).render("giphy-overview", renderData)
+    res
+      .status(200)
+      .render("giphy-overview", { layout: "layout-no-nav", ...renderData })
   } catch (error) {
     res.status(400).send("Bad Request", error)
   }
