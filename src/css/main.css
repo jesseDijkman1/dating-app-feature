@@ -410,7 +410,8 @@ em {
   margin-top: 0.5em;
 }
 
-.message--left + .message--right .message--right + .message--left {
+.message--left + .message--right,
+.message--right + .message--left {
   margin-top: 2.5em;
 }
 
