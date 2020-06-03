@@ -16,7 +16,7 @@
       }
 
     </style>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/src/css/main.css">
 
   </head>
@@ -30,6 +30,11 @@
     <footer class="footer-navigation">
       <nav class="footer-navigation__container">
         <ul class="footer-navigation__list">
+          <li class="footer-navigation__list-item">
+            <form class="footer-navigation__list-item" action="/logout" method="POST">
+              <button class="footer-navigation__link" type="submit">Logout</button>
+            </form>
+          </li>
           <li class="footer-navigation__list-item">
             <a class="footer-navigation__link" href="/">Home</a>
           </li>

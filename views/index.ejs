@@ -1,32 +1,31 @@
-<h1>Hello <%= userName %></h1>
-
-<% if ( !!userId ) { %>
-  <form action="/logout" method="POST">
-    <button>Logout</button>
-  </form>
-<% } %>
-
-
-<main>
+<main class="user-cards">
   <% if (otherUsers.length > 0) { %>
-    <ul class="user-cards">
+    <ul class="user-cards__list">
       <% otherUsers.forEach((otherUser) => { %>
-        <li class="user-card user">
-          <% if (otherUser.gender == "male") { %>
-            <img src="https://w7.pngwing.com/pngs/980/886/png-transparent-male-portrait-avatar-computer-icons-icon-design-avatar-flat-face-icon-people-head-cartoon.png ">
-          <% } else { %>
-            <img src="https://image.flaticon.com/icons/png/512/219/219969.png">
-          <% } %>
-          
-          <h3 class="user__name"><%= otherUser.name %></h3>
-          <h4 class="user__age"><%= otherUser.age %></h4>
+        <li class="user-cards__list-item">
+          <article class="user-card">
+            <div class="user-card__image-container">
+              <% if (otherUser.gender == "male") { %>
+                <img class="user-card__image" src="https://cdn.webshopapp.com/shops/23272/files/203986157/nerd-bril.jpg">
+              <% } else { %>
+                <img class="user-card__image" src="https://www.birthdaymessagesstatus.com/wp-content/uploads/2018/08/Stylish-Attitude-Girl-Images-for-FB-Profile-Pic-300x291.jpg">
+              <% } %>
 
+              <footer class="user-card__footer">
+                <h3 class="user-card__name"><%= otherUser.name %></h3>
+                <h4 class="user-card__age"><%= otherUser.age %></h4>
+              </footer>
+            </div>
 
-          <form class="user-form" action="/user/like" method="POST">
-            <input type="hidden" name="userId" value="<%= userId %>">
-            <input type="hidden" name="otherUserId" value="<%= otherUser._id %>">
-            <button type="submit" class="user__button--like">Like</button>
-          </form>
+            <form class="user-card__form" action="/user/like" method="POST">
+              <input type="hidden" name="userId" value="<%= userId %>">
+              <input type="hidden" name="otherUserId" value="<%= otherUser._id %>">
+              <button type="submit" class="user-card__button user-card__button--like"><i class="fa fa-heart"></i></button>
+            </form>
+            
+            
+
+          </article>
         </li>
       <% }) %>
     </ul>

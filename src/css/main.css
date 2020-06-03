@@ -64,22 +64,9 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-button::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: white;
-  opacity: 0;
-}
 button:hover,
 select:hover {
   cursor: pointer;
-}
-button:hover::after {
-  opacity: 0.15;
 }
 
 hr {
@@ -138,6 +125,11 @@ em {
 
 .footer-navigation__link {
   color: white;
+  opacity: 0.8;
+}
+
+.footer-navigation__link:hover {
+  opacity: 1;
 }
 
 .footer-navigation__link {
@@ -215,4 +207,92 @@ em {
   text-align: right;
   max-width: 450px;
   margin-top: 1.5em;
+}
+
+/* ----- User cards ----- */
+
+.user-cards {
+  width: 100%;
+  padding: 20vh 0 10vh;
+}
+
+.user-cards__list-item {
+  margin-bottom: 15vh;
+}
+
+.user-cards__list-item:nth-child(even) .user-card {
+  float: right;
+  flex-direction: row-reverse;
+}
+.user-cards__list-item:nth-child(even) .user-card__form {
+  margin-left: 0;
+  margin-right: 2em;
+}
+
+.user-card {
+  display: flex;
+  position: relative;
+  max-height: 350px;
+  max-width: 400px;
+  width: 100vw;
+  height: 100vh;
+}
+.user-card__image-container {
+  position: relative;
+  flex-grow: 1;
+  width: 100%;
+}
+.user-card__image {
+  border-radius: 5px 5px 0 0;
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.user-card__footer {
+  width: 100%;
+  position: absolute;
+  background: var(--light-grey);
+  top: 100%;
+  left: 0;
+  border-radius: 0 0 5px 5px;
+  display: flex;
+  padding: 0.75em 1em;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-card__name {
+  font-size: 1.5em;
+  color: var(--red);
+}
+.user-card__age {
+  font-size: 1.25em;
+  color: var(--dark-light);
+}
+
+.user-card__form {
+  /* position: absolute; */
+  height: 100%;
+  margin-left: 2em;
+  display: flex;
+  align-items: center;
+}
+
+.user-card__button {
+  background: var(--red);
+  color: var(--light-grey);
+  font-size: 2.25em;
+  padding: 0.35em;
+  line-height: 0;
+  vertical-align: middle;
+  border-radius: 100px;
+  color: var(--white-transparent);
+}
+
+.user-card__button:hover {
+  color: white;
 }
