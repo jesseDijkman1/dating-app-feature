@@ -29,7 +29,7 @@ Before coding, I had to write down a job story, that would become a feature. The
 
 > When I'm on the bus with my phone in one hand, I want to be able to send GIF's or images so I can talk with one hand
 
-So when you don't have both hands available, you can still look up a funny GIF and send that. A dating app that has this feature is [Tinder](https://tinder.com/).
+So when you don't have both hands available, you can still look up a funny GIF and send that instead of a long message. A dating app that has this feature is [Tinder](https://tinder.com/). Tinder uses the API from [Giphy](https://giphy.com/), so I will do the same.
 
 
 ---
