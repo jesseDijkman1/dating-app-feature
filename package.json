@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "Jesse Dijkman",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/jesseDijkman1/backend-2020/issues"
   },
