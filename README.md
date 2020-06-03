@@ -31,6 +31,9 @@ DB_CONNECT=[MONGO DATABASE URL]
 GIPHY_API_KEY=[API KEY FROM GIPHY.COM]
 ```
 
+And to run the project
+```npm start```
+
 ---
 
 ## Job Story & Feature ✍️
