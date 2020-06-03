@@ -8,9 +8,11 @@ This project was created for the course: Backend and Project Tech. The idea was 
 
 ## Table of Contents
 
-1. Installation Guide
-2. Job Story & Feature
-3.
+1. [Installation Guide](#installation-guide)
+2. [Job Story & Feature](#job-story-&-feature)
+3. [Goals](#goals)
+4. [Process](#process)
+5. [How it Works](#how-it-works)
 
 ---
 
@@ -54,3 +56,13 @@ Before I started I knew I wanted to make it accessible. This means the feature c
 I started with a login and register page (which I should't have, because that's not my feature). I waisted some time on this, and also on the matching feature. I started way too late with the actual chat feature, but managed to get it done.
 
 I started with the basic HTML. Every page (feature) had been tested before I added the styling. I started with the core and added a sugar coating of CSS later in the process.
+
+---
+
+## How it Works
+When you get on the website you will be limited to the login and register page. You need to login, either with a test account, or your own. The register and login are not save at all, the login wasn't my main priority. To prevent people from using actual passwords I made the default password: `123`. 
+
+There are currently three accounts on the database with which you can test (they all have the same password `123`):
+- `piet@live.nl`
+- `anna@live.nl`
+- `sam@live.nl`
