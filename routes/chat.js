@@ -20,9 +20,15 @@ router.get("/:id", isLoggedIn, isMatched, async (req, res) => {
     const otherUserId = users.filter((uid) => uid != userId)[0]
     const otherUser = await User.findById(otherUserId)
 
-    const renderData = { matchId, userId, otherUser, messages }
+    const renderData = {
+      matchId,
+      userId,
+      otherUser,
+      messages,
+      previousUrl: "/matches",
+    }
 
-    res.status(200).render("chat", renderData)
+    res.status(200).render("chat", { layout: "layout-no-nav", ...renderData })
   } catch (error) {
     res.status(400).send("Bad request", error)
   }
@@ -92,9 +98,16 @@ router.get("/:id/giphy", isLoggedIn, isMatched, async (req, res) => {
         id: giphy.id,
       }))
 
-      const renderData = { matchId, userId, giphies }
+      const renderData = {
+        matchId,
+        userId,
+        giphies,
+        previousUrl: `/chat/${matchId}`,
+      }
 
-      res.status(200).render("giphy-overview", renderData)
+      res
+        .status(200)
+        .render("giphy-overview", { layout: "layout-no-nav", ...renderData })
     } catch (error) {
       res.status(400).send("Bad Request", error)
     }
