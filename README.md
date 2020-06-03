@@ -19,10 +19,13 @@ This project was created for the course(s): Backend and Project Tech. The idea w
 ---
 
 ## Installation Guide ⚙️
+```
+1. git clone https://github.com/jesseDijkman1/dating-app-feature.git
 
-`git clone https://github.com/jesseDijkman1/dating-app-feature.git`
-`cd dating-app-feature`
-`npm install`
+2. cd dating-app-feature
+
+3. npm install
+```
 
 You'll need to setup a `.env` file with these values:
 
