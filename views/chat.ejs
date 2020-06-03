@@ -1,28 +1,33 @@
-<header>
-  <h4><%= otherUser.name %></h4>
-</header>
-<main>
-  <ul>
-    <% messages.forEach(message => { %>
-      <li class="message <% if (message.userId == userId) { %>message--mine<% } %>">
-        <% if (message.message == null && !!message.giphySrc) { %>
-          <img src="<%= message.giphySrc %>">
-        <% } else { %>
-        <p><%= message.message %></p>
-        <small><%= message.date %></small>
-        <% } %>
-      </li>
-    <% }) %>
-  </ul>
+<main class="chat-messages">
+  <div class="chat-messages__container">
+    <ul class="chat-messages__list">
+      <% messages.forEach(message => { %>
+      <li class="chat-messages__message message <% if (message.userId == userId) { %>message--right<% } else { %>message--left<% } %>">
+          <% if (message.message == null && !!message.giphySrc) { %>
+            <div class="message__image-container">
+              <img class="message__image" src="<%= message.giphySrc %>">
+            </div>
+          <% } else { %>
+
+          <p class="message__text"><%= message.message %></p>
+          <% } %>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
 </main>
 
-<footer>
-  <a href="/chat/<%= matchId %>/giphy">GIPHY</a>
+<footer class="chat-footer">
+  <div class="chat-footer__container">
+    <div class="chat-footer__wrapper">
+      <a class="chat-footer__giphy-overview-link" href="/chat/<%= matchId %>/giphy">GIPHY</a>
 
-  <form action="/chat/message" method="POST">
-    <input type="hidden" name="matchId" value="<%= matchId %>">
-    <input type="hidden" name="userId" value="<%= userId %>">
-    <input type="text" name="message">
-    <button type="submit">Send</button>
-  </form>
+      <form class="chat-footer__form" action="/chat/message" method="POST">
+        <input type="hidden" name="matchId" value="<%= matchId %>">
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <input class="chat-footer__form-input" type="text" name="message">
+        <button class="chat-footer__form-submit" type="submit"><i class="fa fa-send"></i></button>
+      </form>
+    </div>
+  </div>
 </footer>

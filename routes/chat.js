@@ -102,6 +102,7 @@ router.get("/:id/giphy", isLoggedIn, isMatched, async (req, res) => {
         matchId,
         userId,
         giphies,
+        otherUser: undefined,
         previousUrl: `/chat/${matchId}`,
       }
 

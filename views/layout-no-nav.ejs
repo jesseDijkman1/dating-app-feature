@@ -11,15 +11,14 @@
   
   <body>
     <header class="top-header">
-      <a href="<%= previousUrl %>"><i class="fa fa-toggle-left"></i><-</a>
+      <a class="top-header__back-btn" href="<%= previousUrl %>"><i class="fa fa-toggle-left"></i></a>
+      <% if (otherUser != undefined) { %>
+        <h1 class="top-header__heading--center"><%= otherUser.name %></h1>
+      <% } %>
     </header>
     
-    <div class="page-container">
-      <%- body %>
-    </div>
+    <%- body %>
     
-   
-
     <script src="/src/index.js"></script>
   </body>
 </html>
