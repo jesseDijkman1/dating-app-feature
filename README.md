@@ -1,7 +1,7 @@
 # Dating Feature (Project Tech & Backend)
 ### Student: Jesse Dijkman (500754406)
 
-## Intro
+![demo](https://github.com/jesseDijkman1/dating-app-feature/blob/master/assets/demo.png)
 
 This project was created for the course(s): Backend and Project Tech. The idea was to create a single feature of a dating app. The feature I picked is a chat feature with the abillity to send gifs.
 
